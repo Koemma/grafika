@@ -21,6 +21,8 @@ float scalar(float matrix1[3][3], float matrix2[3][3]);
 void multiply_matrices(float matrix1[3][3], float matrix2[3][3], float matrix3[3][3]);
 void transform_point(float matrix[3][3], float pont[3], float pont2[3]);
 void rotate(float matrix1[3][3], float szog);
+void scale(float matrix1[3][3], float x, float y);
+void shift(float matrix1[3][3], float x, float y);
 
 #endif // MATRIX_H
 

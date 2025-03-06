@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <math.h>
 
-
 #define PI 3.14159265358979323846
 
 void init_zero_matrix(float matrix[3][3])
@@ -114,9 +113,56 @@ void transform_point(float matrix[3][3], float pont[3], float pont2[3])
     }
 }
 
-void rotate(float matrix1[3][3], float szog){
+void rotate(float matrix1[3][3], float szog)
+{
     float rad = szog * PI / 180.0;
-    float matrix2[3][3] = {{cos(rad),-sin(rad),0},{sin(rad), cos(rad),0},{0,0,1}};
+    float matrix2[3][3] = {{cos(rad), -sin(rad), 0},
+                           {sin(rad), cos(rad), 0},
+                           {0, 0, 1}};
     float matrix3[3][3];
     multiply_matrices(matrix1, matrix2, matrix3);
+
+    for (size_t i = 0; i < 3; i++)
+    {
+        for (size_t j = 0; j < 3; j++)
+        {
+            matrix1[i][j] = matrix3[i][j];
+        }
+    }
+}
+
+void scale(float matrix1[3][3], float x, float y)
+{
+    float scale_m[3][3] = {
+        {x, 0, 0},
+        {0, y, 0},
+        {0, 0, 1}};
+
+    float matrix2[3][3];
+    multiply_matrices(matrix1, scale_m, matrix2);
+    for (size_t i = 0; i < 3; i++)
+    {
+        for (size_t j = 0; j < 3; j++)
+        {
+            matrix1[i][j] = matrix2[i][j];
+        }
+    }
+}
+
+void shift(float matrix1[3][3], float x, float y)
+{
+    float shift_m[3][3] = {
+        {1, 0, x},
+        {0, 1, y},
+        {0, 0, 1}};
+
+    float matrix2[3][3];
+    multiply_matrices(matrix1, shift_m, matrix2);
+    for (size_t i = 0; i < 3; i++)
+    {
+        for (size_t j = 0; j < 3; j++)
+        {
+            matrix1[i][j] = matrix2[i][j];
+        }
+    }
 }
