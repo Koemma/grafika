@@ -67,6 +67,3 @@
  {
      /* SDL will clean up the window/renderer for us. */
  }
- 
- 
- 
