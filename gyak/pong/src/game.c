@@ -4,12 +4,13 @@
 
 #include <stdio.h>
 
-void init_game(Game* game, int width, int height)
+void init_game(Game *game, int width, int height)
 {
     game->is_running = false;
     game->width = width;
     game->height = height;
-    if (init_sdl(game) == false) {
+    if (init_sdl(game) == false)
+    {
         return;
     }
     init_opengl(game);
@@ -17,20 +18,22 @@ void init_game(Game* game, int width, int height)
     game->is_running = true;
 }
 
-void destroy_game(Game* game)
+void destroy_game(Game *game)
 {
-    if (game->gl_context != NULL) {
+    if (game->gl_context != NULL)
+    {
         SDL_GL_DeleteContext(game->gl_context);
     }
 
-    if (game->window != NULL) {
+    if (game->window != NULL)
+    {
         SDL_DestroyWindow(game->window);
     }
 
     SDL_Quit();
 }
 
-void handle_game_events(Game* game)
+void handle_game_events(Game *game)
 {
     SDL_Event event;
     static bool is_mouse_down = false;
@@ -39,10 +42,13 @@ void handle_game_events(Game* game)
     int x;
     int y;
 
-    while (SDL_PollEvent(&event)) {
-        switch (event.type) {
+    while (SDL_PollEvent(&event))
+    {
+        switch (event.type)
+        {
         case SDL_KEYDOWN:
-            switch (event.key.keysym.scancode) {
+            switch (event.key.keysym.scancode)
+            {
             case SDL_SCANCODE_ESCAPE:
                 game->is_running = false;
                 break;
@@ -57,10 +63,25 @@ void handle_game_events(Game* game)
             }
             break;
         case SDL_KEYUP:
-            switch (event.key.keysym.scancode) {
+            switch (event.key.keysym.scancode)
+            {
             case SDL_SCANCODE_W:
             case SDL_SCANCODE_S:
                 set_left_pad_speed(&(game->pong), 0);
+                break;
+            case SDL_SCANCODE_UP:
+                game->pong.ball.radius += 5;
+                if (game->pong.ball.radius > 100)
+                {
+                    game->pong.ball.radius = 100;
+                }
+                break;
+            case SDL_SCANCODE_DOWN:
+                game->pong.ball.radius -= 5;
+                if (game->pong.ball.radius < 10)
+                {
+                    game->pong.ball.radius = 10;
+                }
                 break;
             default:
                 break;
@@ -73,13 +94,17 @@ void handle_game_events(Game* game)
         case SDL_QUIT:
             game->is_running = false;
             break;
+        case SDL_MOUSEBUTTONDOWN:
+            game->pong.ball.x = event.button.x;
+            game->pong.ball.y = event.button.y;
+            break;
         default:
             break;
         }
     }
 }
 
-void update_game(Game* game)
+void update_game(Game *game)
 {
     double current_time;
     double elapsed_time;
@@ -91,19 +116,20 @@ void update_game(Game* game)
     update_pong(&(game->pong), elapsed_time);
 }
 
-void render_game(Game* game)
+void render_game(Game *game)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     render_pong(&(game->pong));
     SDL_GL_SwapWindow(game->window);
 }
 
-bool init_sdl(Game* game)
+bool init_sdl(Game *game)
 {
     int error_code;
 
     error_code = SDL_Init(SDL_INIT_EVERYTHING);
-    if (error_code != 0) {
+    if (error_code != 0)
+    {
         printf("[ERROR] SDL initialization error: %s\n", SDL_GetError());
         return false;
     }
@@ -112,14 +138,16 @@ bool init_sdl(Game* game)
         "Pong!",
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         game->width, game->height,
-        SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
-    if (game->window == NULL) {
+        SDL_WINDOW_OPENGL);
+    if (game->window == NULL)
+    {
         printf("[ERROR] Unable to create the application window!\n");
         return false;
     }
 
     game->gl_context = SDL_GL_CreateContext(game->window);
-    if (game->gl_context == NULL) {
+    if (game->gl_context == NULL)
+    {
         printf("[ERROR] Unable to create the OpenGL context!\n");
         return false;
     }
@@ -127,7 +155,7 @@ bool init_sdl(Game* game)
     return true;
 }
 
-void init_opengl(Game* game)
+void init_opengl(Game *game)
 {
     glShadeModel(GL_SMOOTH);
     glClearColor(0.1, 0.1, 0.1, 1.0);

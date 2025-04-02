@@ -11,6 +11,8 @@ typedef struct Ball
     float radius;
     float speed_x;
     float speed_y;
+    float rotation;
+    float rotation_speed;
 } Ball;
 
 /**
@@ -22,7 +24,7 @@ void init_ball(Ball* ball, float x, float y);
  * Update the ball.
  * @param time elapsed time in seconds.
  */
-void update_ball(Ball* ball, double time);
+void update_ball(Ball* ball, double time, int width);
 
 /**
  * Render the ball.
