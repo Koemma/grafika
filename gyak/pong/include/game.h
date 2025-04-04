@@ -17,7 +17,9 @@ typedef struct Game
     int width;
     int height;
     Pong pong;
+    
 } Game;
+
 
 /**
  * Init the game.

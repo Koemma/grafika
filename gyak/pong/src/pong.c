@@ -55,6 +55,14 @@ void bounce_ball(Pong *pong)
 
             pong->ball.x = pong->ball.radius + 50;
             pong->ball.speed_x *= -1;
+            if (pong->ball.rotation_speed > 300 || pong->ball.rotation_speed < 30)
+            {
+                pong->ball.rotation_speed = 30;
+            }
+            else
+            {
+                pong->ball.rotation_speed *= -0.5;
+            }
         }
         else
         {
@@ -68,6 +76,14 @@ void bounce_ball(Pong *pong)
 
             pong->ball.x = pong->width - pong->ball.radius - 50;
             pong->ball.speed_x *= -1;
+            if (pong->ball.rotation_speed > 300 || pong->ball.rotation_speed < 30)
+            {
+                pong->ball.rotation_speed = 30;
+            }
+            else
+            {
+                pong->ball.rotation_speed *= -2;
+            }
         }
         else
         {

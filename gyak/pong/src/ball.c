@@ -12,8 +12,8 @@ void init_ball(Ball *ball, float x, float y)
     ball->radius = 50;
     ball->speed_x = 200;
     ball->speed_y = 200;
-    ball->rotation = 0;
-    ball->rotation_speed = 30;
+    ball->rotation = 0.0;
+    ball->rotation_speed = 60;
 }
 
 void update_ball(Ball *ball, double time, int width)
@@ -21,19 +21,6 @@ void update_ball(Ball *ball, double time, int width)
     ball->x += ball->speed_x * time;
     ball->y += ball->speed_y * time;
     ball->rotation += ball->rotation_speed * time;
-
-    if (ball->x - ball->radius <= 0) {
-        ball->rotation_speed *= -2.0;
-    }
-
-    if (ball->x + ball->radius >= width) {
-        ball->rotation_speed *= -0.5;
-    }
-
-    if (ball->rotation_speed > 500 || ball->rotation_speed < 30)
-    {
-        ball->rotation_speed = 30;
-    }
 }
 
 void render_ball(Ball *ball)
@@ -46,7 +33,6 @@ void render_ball(Ball *ball)
     glTranslatef(ball->x, ball->y, 0.0);
     glRotatef(ball->rotation, 0.0, 0.0, 1.0);
     glBegin(GL_TRIANGLE_FAN);
-    //glColor3f(1.0, 0.9, 0.8);
     glColor3f(0.0, 0.9, 0.8);
     glVertex2f(0, 0);
     angle = 0;

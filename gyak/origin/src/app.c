@@ -19,7 +19,7 @@ void init_app(App* app, int width, int height)
         "Origin!",
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         width, height,
-        SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
+        SDL_WINDOW_OPENGL);
     if (app->window == NULL) {
         printf("[ERROR] Unable to create the application window!\n");
         return;
