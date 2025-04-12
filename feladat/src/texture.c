@@ -23,3 +23,4 @@ GLuint load_texture(char* filename)
 
     return texture;
 }
+

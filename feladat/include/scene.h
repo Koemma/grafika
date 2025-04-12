@@ -10,10 +10,11 @@ typedef struct Scene
 {
     Model stage;
     Model screen;
-    //Model platform;
+    Model platform;
     Material material;
     GLuint stage_texture_id;
     GLuint screen_texture_id;
+    GLuint platform_texture_id;
 } Scene;
 
 void init_scene(Scene* scene);

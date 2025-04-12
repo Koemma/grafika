@@ -7,11 +7,11 @@ void init_scene(Scene *scene)
 {
     load_model(&(scene->stage), "assets/models/stage.obj");
     load_model(&(scene->screen), "assets/models/screen.obj");
-    scene->stage_texture_id = load_texture("assets/textures/lover_stage.png");
-    scene->screen_texture_id = load_texture("assets/textures/lover_screen.png");
-    //  load_model(&(scene->platform), "assets/models/platform.obj");
+    load_model(&(scene->platform), "assets/models/platform.obj");
 
-    //glBindTexture(GL_TEXTURE_2D, scene->texture_id);
+    //scene->stage_texture_id = load_texture("assets/textures/lover_stage.png");
+    //scene->screen_texture_id = load_texture("assets/textures/lover_screen.png");
+    //scene->platform_texture_id = load_texture("assets/textures/lover_screen.png");
 
     scene->material.ambient.red = 0.6;
     scene->material.ambient.green = 0.6;
@@ -73,12 +73,16 @@ void render_scene(const Scene *scene)
 {
     set_material(&(scene->material));
     set_lighting();
-    draw_origin();
-    //draw_model(&(scene->stage));
-    //draw_model(&(scene->screen));
+    // draw_origin();
     draw_model(&(scene->stage), scene->stage_texture_id);
     draw_model(&(scene->screen), scene->screen_texture_id);
-    //  draw_model(&(scene->platform));
+    glPushMatrix();
+    for (int i = 0; i < 8; i++)
+    {
+        glTranslatef(0.2f, 0.0f, 0.0f);
+        draw_model(&(scene->platform), scene->platform_texture_id);
+    }
+    glPopMatrix();
 }
 
 void draw_origin()

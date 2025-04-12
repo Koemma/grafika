@@ -8,7 +8,7 @@
 
 #include <stdbool.h>
 
-#define VIEWPORT_RATIO (4.0 / 3.0)
+#define VIEWPORT_RATIO (3.0 / 2.0)
 #define VIEWPORT_ASPECT 50.0
 
 typedef struct App
@@ -28,5 +28,7 @@ void handle_app_events(App* app);
 void update_app(App* app);
 void render_app(App* app);
 void destroy_app(App* app);
+void draw_panel();
+
 
 #endif

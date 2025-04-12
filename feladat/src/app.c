@@ -18,7 +18,7 @@ void init_app(App *app, int width, int height)
     }
 
     app->window = SDL_CreateWindow(
-        "Cube!",
+        "Stage",
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         width, height,
         SDL_WINDOW_OPENGL);
@@ -212,6 +212,7 @@ void render_app(App *app)
     render_scene(&(app->scene));
     glPopMatrix();
     glPushMatrix();
+    draw_panel();
 
     if (app->camera.is_preview_visible)
     {
@@ -219,6 +220,37 @@ void render_app(App *app)
     }
 
     SDL_GL_SwapWindow(app->window);
+}
+
+void draw_panel()
+{
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0, 1, 0, 1, -1, 1);
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_LIGHTING);
+
+    glColor3f(1.0, 0.6, 0.8);
+    glBegin(GL_QUADS);
+        glVertex2f(0.0f, 0.0f);
+        glVertex2f(0.2f, 0.0f);
+        glVertex2f(0.2f, 1.0f);
+        glVertex2f(0.0f, 1.0f);
+    glEnd();
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_DEPTH_TEST);
+
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
 }
 
 void destroy_app(App *app)
