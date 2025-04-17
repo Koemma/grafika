@@ -1,5 +1,6 @@
 #include "app.h"
 #include <stdio.h>
+#include <texture.h>
 
 #include <SDL2/SDL_image.h>
 
@@ -47,6 +48,7 @@ void init_app(App *app, int width, int height)
 
     init_camera(&(app->camera));
     init_scene(&(app->scene));
+    // init_textures();
 
     app->is_running = true;
 }
@@ -161,12 +163,29 @@ void handle_app_events(App *app)
             case SDL_SCANCODE_R:
                 reset_camera_view(&(app->camera));
                 break;
+            case SDL_SCANCODE_UP:
+                /*app->scene.platform_scale_z += 0.1f;
+                if (app->scene.platform_scale_z > 1.0f)
+                {
+                    app->scene.platform_scale_z = 1.0f;
+                    printf("Z scale UP: %.2f\n", app->scene.platform_scale_z);
+                }*/
+                break;
+            case SDL_SCANCODE_DOWN:
+                /*app->scene.platform_scale_z -= 0.1f;
+                if (app->scene.platform_scale_z < 0.05f) {
+                    app->scene.platform_scale_z = 0.05f;
+                    printf("Z scale down: %.2f\n", app->scene.platform_scale_z);
+                }*/
+                break;
             default:
                 break;
             }
             break;
         case SDL_MOUSEBUTTONDOWN:
             is_mouse_down = true;
+            SDL_GetMouseState(&mouse_x, &mouse_y);
+            handle_button_clicks(&app->scene, mouse_x, mouse_y);
             break;
         case SDL_MOUSEMOTION:
             SDL_GetMouseState(&x, &y);
@@ -186,6 +205,23 @@ void handle_app_events(App *app)
         default:
             break;
         }
+    }
+}
+
+void handle_button_clicks(Scene *scene, int mouse_x, int mouse_y)
+{
+    int window_w, window_h;
+    SDL_GetWindowSize(SDL_GL_GetCurrentWindow(), &window_w, &window_h);
+
+    float x = (float)mouse_x / window_w;
+    float y = 1.0f - (float)mouse_y / window_h;
+
+    //printf("x = %f, y = %f\n", x, y);
+
+    if (x >= 0.005f && x <= 0.185f && y >= 0.9f && y <= 0.95f)
+    {
+        //printf("Gomb\n");
+        cycle_texture(scene);
     }
 }
 
@@ -216,7 +252,7 @@ void render_app(App *app)
 
     if (app->camera.is_preview_visible)
     {
-        show_texture_preview();
+        // show_texture_preview();
     }
 
     SDL_GL_SwapWindow(app->window);
@@ -238,11 +274,13 @@ void draw_panel()
 
     glColor3f(1.0, 0.6, 0.8);
     glBegin(GL_QUADS);
-        glVertex2f(0.0f, 0.0f);
-        glVertex2f(0.2f, 0.0f);
-        glVertex2f(0.2f, 1.0f);
-        glVertex2f(0.0f, 1.0f);
+    glVertex2f(0.0f, 0.0f);
+    glVertex2f(0.2f, 0.0f);
+    glVertex2f(0.2f, 1.0f);
+    glVertex2f(0.0f, 1.0f);
     glEnd();
+
+    draw_button(0.005f, 0.95f, 0.185f, 0.05f, 1.0f, 0.8f, 0.9f);
 
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
@@ -251,6 +289,21 @@ void draw_panel()
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
     glMatrixMode(GL_MODELVIEW);
+}
+
+void draw_button(float x, float y, float w, float h, float r, float g, float b)
+{
+    glPushMatrix();
+    glTranslatef(x, y, 0.0f);
+
+    glColor3f(r, g, b);
+    glBegin(GL_QUADS);
+    glVertex2f(0, 0);
+    glVertex2f(w, 0);
+    glVertex2f(w, -h);
+    glVertex2f(0, -h);
+    glEnd();
+    glPopMatrix();
 }
 
 void destroy_app(App *app)

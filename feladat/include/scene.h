@@ -15,6 +15,8 @@ typedef struct Scene
     GLuint stage_texture_id;
     GLuint screen_texture_id;
     GLuint platform_texture_id;
+    float platform_scale_z;
+    int texture_index; 
 } Scene;
 
 void init_scene(Scene* scene);
@@ -22,6 +24,7 @@ void set_lighting();
 void set_material(const Material* material);
 void update_scene(Scene* scene);
 void render_scene(const Scene* scene);
-void draw_origin();
+void drawFloor();
+void drawLights();
 
 #endif
