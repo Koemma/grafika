@@ -26,6 +26,7 @@ typedef struct Scene
     float spot_red;
     float spot_green;
     float spot_blue;
+    bool screen_lighting;
 } Scene;
 
 void init_scene(Scene* scene);
@@ -34,6 +35,7 @@ BoundingBox scene_get_bounding_box(const Scene* scene);
 bool is_inside_box(const BoundingBox *box, const vec3 position);
 void set_lighting();
 void set_spotlight(float px, float py, float pz, float dx, float dy, float dz, float r, float g, float b);
+void set_screen_lighting(const Scene *scene, float px, float py, float pz);
 void set_material(const Material* material);
 void update_scene(Scene* scene);
 void render_scene(const Scene* scene);

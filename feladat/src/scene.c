@@ -34,6 +34,8 @@ void init_scene(Scene *scene)
     scene->spot_green = -0.1;
     scene->spot_blue = -0.1;
 
+    scene->screen_lighting = false;
+
     scene->screen_box = calculate_bounding_box(&(scene->screen));
 }
 
@@ -91,7 +93,7 @@ void set_lighting()
 {
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-    float ambient_light[] = {0.8f, 0.8f, 0.7f, 1.0f};
+    float ambient_light[] = {0.4f, 0.4f, 0.3f, 1.0f};
     float diffuse_light[] = {1.0f, 1.0f, 0.9f, 1.0f};
     float specular_light[] = {1.0f, 1.0f, 0.9f, 1.0f};
     float position[] = {0.0f, -0.5f, 10.0f, 1.0f};
@@ -127,7 +129,6 @@ void set_spotlight(float px, float py, float pz, float dx, float dy, float dz, f
         glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 180.0f);
         glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 0.0f);
         set_lighting();
-
     }
     else
     {
@@ -146,6 +147,23 @@ void set_spotlight(float px, float py, float pz, float dx, float dy, float dz, f
 
     float no_emission[] = {0.0f, 0.0f, 0.0f, 1.0f};
     glMaterialfv(GL_FRONT, GL_EMISSION, no_emission);
+}
+
+void set_screen_lighting(const Scene *scene, float px, float py, float pz)
+{
+    glEnable(GL_LIGHTING);
+    if(scene->screen_lighting == true){
+        glEnable(GL_LIGHT2);
+    }
+    float ambient[] = {2.0f, 2.0f, 2.0f, 1.0f};
+    float diffuse[] = {2.0f, 2.0f, 2.0f, 1.0f};
+    float specular[] = {2.0f, 2.0f, 2.0f, 1.0f};
+    float position[] = {px, py, pz, 1.0f};
+
+    glLightfv(GL_LIGHT2, GL_AMBIENT, ambient);
+    glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse);
+    glLightfv(GL_LIGHT2, GL_SPECULAR, specular);
+    glLightfv(GL_LIGHT2, GL_POSITION, position);
 }
 
 void set_material(const Material *material)
@@ -185,9 +203,13 @@ void render_scene(const Scene *scene)
     set_spotlight(1.0f, 3.75f, 1.575f, -0.5f, -0.7f, -1.0f, scene->spot_red, scene->spot_green, scene->spot_blue);
     set_spotlight(-1.0f, 3.75f, 1.575f, 0.5f, -0.7f, -1.0f, scene->spot_red, scene->spot_green, scene->spot_blue);
     drawFloor();
+    set_screen_lighting(scene, 0.0f, 0.0f, 0.25f);
     draw_model(&(scene->stage), scene->stage_texture_id);
+    set_screen_lighting(scene, 0.0f, 3.8f, 1.5f);
     draw_model(&(scene->screen), scene->screen_texture_id);
     glPushMatrix();
+    set_screen_lighting(scene, 1.0f, 1.0f, 1.0f);
+    set_screen_lighting(scene, -1.0f, -1.0f, 0.0f);
     for (int i = 0; i < 8; i++)
     {
         glTranslatef(0.2f, 0.0f, 0.0f);
@@ -195,6 +217,7 @@ void render_scene(const Scene *scene)
         draw_model(&(scene->platform), scene->platform_texture_id);
     }
     glPopMatrix();
+    glDisable(GL_LIGHT2);
 }
 
 void draw_cube(float size)

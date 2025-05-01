@@ -5,7 +5,6 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
-
 void init_app(App *app, int width, int height)
 {
     int error_code;
@@ -233,28 +232,36 @@ void handle_button_clicks(Scene *scene, int mouse_x, int mouse_y)
         cycle_texture(scene);
     }
 
-    if (x >= 0.005f && x <= 0.0525f && y >= 0.8f && y <= 0.85f)
+    if (x >= 0.005f && x <= 0.19f && y >= 0.8f && y <= 0.85f)
+    {
+        scene->screen_lighting = !(scene->screen_lighting);
+    }
+
+    if (x >= 0.005f && x <= 0.0525f && y >= 0.7f && y <= 0.75f)
     {
         scene->spot_red += 0.25;
-        if(scene->spot_red >= 2.0){
+        if (scene->spot_red >= 2.0)
+        {
             scene->spot_red = 0.0;
         }
     }
-    else if (x >= 0.0525f && x <= 0.1f && y >= 0.8f && y <= 0.85f)
+    else if (x >= 0.0525f && x <= 0.1f && y >= 0.7f && y <= 0.75f)
     {
         scene->spot_green += 0.25;
-        if(scene->spot_green >= 2.0){
+        if (scene->spot_green >= 2.0)
+        {
             scene->spot_green = 0.0;
         }
     }
-    else if (x >= 0.1f && x <= 0.1475f && y >= 0.8f && y <= 0.85f)
+    else if (x >= 0.1f && x <= 0.1475f && y >= 0.7f && y <= 0.75f)
     {
         scene->spot_blue += 0.25;
-        if(scene->spot_blue >= 2.0){
+        if (scene->spot_blue >= 2.0)
+        {
             scene->spot_blue = 0.0;
         }
     }
-    else if (x >= 0.1475f && x <= 0.195f && y >= 0.8f && y <= 0.85f)
+    else if (x >= 0.1475f && x <= 0.195f && y >= 0.7f && y <= 0.75f)
     {
         scene->spot_red = -0.1;
         scene->spot_green = -0.1;
@@ -358,10 +365,11 @@ void draw_panel()
     glEnd();
 
     draw_button(0.005f, 0.95f, 0.19f, 0.05f, 1.0f, 0.8f, 0.9f);
-    draw_button(0.005f, 0.84f, 0.0475f, 0.05f, 1.0f, 0.0f, 0.0f);
-    draw_button(0.0525f, 0.84f, 0.0475f, 0.05f, 0.0f, 1.0f, 0.0f);
-    draw_button(0.1f, 0.84f, 0.0475f, 0.05f, 0.0f, 0.0f, 1.0f);
-    draw_button(0.1475f, 0.84f, 0.0475f, 0.05f, 0.0f, 0.0f, 0.0f);
+    draw_button(0.005f, 0.85f, 0.19f, 0.05f, 1.0f, 0.8f, 0.9f);
+    draw_button(0.005f, 0.75f, 0.0475f, 0.05f, 1.0f, 0.0f, 0.0f);
+    draw_button(0.0525f, 0.75f, 0.0475f, 0.05f, 0.0f, 1.0f, 0.0f);
+    draw_button(0.1f, 0.75f, 0.0475f, 0.05f, 0.0f, 0.0f, 1.0f);
+    draw_button(0.1475f, 0.75f, 0.0475f, 0.05f, 0.0f, 0.0f, 0.0f);
 
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
@@ -445,6 +453,6 @@ void destroy_app(App *app)
     }
 
     IMG_Quit();
-    //TTF_Quit();
+    // TTF_Quit();
     SDL_Quit();
 }
