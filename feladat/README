@@ -1,7 +1,21 @@
 Stage simulator
 (The Eras Tour stage - Taylor Swift)
 
+- színpad objektum
+- kivetítő objektum
+- platform objektum
+
+- textúra változtatás
+- platform fel, le mozgatás
+- ütközésvizsgálat
+- térkép
+- fények állítása
+- használati útmutató
+- árnyék
+
 Útmutató:
 - WASD billentyűk -> mozgás
 - egér -> kamera mozgatás
 - XYZR billenytűk -> nézet az x, y, z tengelyről, r visszaálltás
+- fel, le nyíl -> platfrom mozgatás
+- gomb -> textúra változtatás

@@ -1,5 +1,4 @@
 #include "draw.h"
-
 #include <GL/gl.h>
 
 void draw_model(const Model* model, GLuint texture_id)

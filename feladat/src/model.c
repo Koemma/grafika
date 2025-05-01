@@ -1,5 +1,4 @@
 #include "model.h"
-
 #include <stdlib.h>
 
 void init_model(Model* model)

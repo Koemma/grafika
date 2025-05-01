@@ -1,5 +1,4 @@
 #include "info.h"
-
 #include <stdio.h>
 
 void print_model_info(const Model* model)

@@ -1,5 +1,4 @@
 #include "load.h"
-
 #include <stdlib.h>
 
 #define LINE_BUFFER_SIZE 1024

@@ -2,9 +2,12 @@
 #define CAMERA_H
 
 #include "utils.h"
+#include "scene.h"
 
 #include <stdbool.h>
 
+struct Scene;
+typedef struct Scene Scene;
 typedef struct Camera
 {
     vec3 position;
@@ -12,9 +15,14 @@ typedef struct Camera
     vec3 speed;
     bool is_preview_visible;
 } Camera;
+typedef struct AABB
+{
+    vec3 min;  // alsó sarok
+    vec3 max;  // felső sarok
+} AABB;
 
 void init_camera(Camera* camera);
-void update_camera(Camera* camera, double time);
+void update_camera(Camera* camera, double time, const Scene* scene);
 void set_view(const Camera* camera);
 void rotate_camera(Camera* camera, double horizontal, double vertical);
 void set_camera_speed(Camera* camera, double speed);
