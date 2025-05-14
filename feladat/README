@@ -19,3 +19,5 @@ Stage simulator
 - XYZR billenytűk -> nézet az x, y, z tengelyről, r visszaálltás
 - fel, le nyíl -> platfrom mozgatás
 - gomb -> textúra változtatás
+       -> színpad és kivetítő fény fel / le kapcsolás
+       -> színes reflektorfény 

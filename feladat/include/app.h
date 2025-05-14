@@ -4,7 +4,6 @@
 #include "camera.h"
 #include "scene.h"
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 #include <stdbool.h>
 
 #define VIEWPORT_RATIO (4.0 / 3.0)
@@ -18,7 +17,6 @@ typedef struct App
     double uptime;
     Camera camera;
     Scene scene;
-    bool show_help;
 } App;
 
 void init_app(App* app, int width, int height);
@@ -28,10 +26,6 @@ void handle_app_events(App* app);
 void handle_button_clicks(Scene* scene, int mouse_x, int mouse_y);
 void update_app(App* app);
 void render_app(App* app);
-//void draw_text(float x, float y, const char *text, SDL_Color color, TTF_Font *font);
-void draw_panel();
-void render_help_overlay();
-void draw_button(float x, float y, float w, float h, float r, float g, float b);
 void destroy_app(App* app);
 
 #endif

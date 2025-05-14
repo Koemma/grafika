@@ -1,11 +1,12 @@
 #include "texture.h"
 #include "scene.h"
+#include "app.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
 GLuint current_texture;
 
-void cycle_texture(Scene* scene)
+void cycle_texture(Scene* scene, int dir)
 {
     static const char* texture_files_screen[] = {
         "assets/textures/screen_lover.png",
@@ -46,10 +47,24 @@ void cycle_texture(Scene* scene)
         "assets/textures/platform_midnights.png"
     };
 
-    scene->texture_index = (scene->texture_index + 1) % 10;
+    static const char* texture_files_button[] = {
+        "assets/textures/button_lover.png",
+        "assets/textures/button_fearless.png",
+        "assets/textures/button_red.png",
+        "assets/textures/button_speaknow.png",
+        "assets/textures/button_reputation.png",
+        "assets/textures/button_folklore.png",
+        "assets/textures/button_evermore.png",
+        "assets/textures/button_1989.png",
+        "assets/textures/button_ttpd.png",
+        "assets/textures/button_midnights.png"
+    };
+
+    scene->texture_index = (scene->texture_index + dir) % 10;
     scene->screen_texture_id = load_texture((char*)texture_files_screen[scene->texture_index]);
     scene->stage_texture_id = load_texture((char*)texture_files_stage[scene->texture_index]);
     scene->platform_texture_id = load_texture((char*)texture_files_platform[scene->texture_index]);
+    scene->button_texture_id = load_texture((char*)texture_files_button[scene->texture_index]);
 }
 
 GLuint load_texture(char *filename)

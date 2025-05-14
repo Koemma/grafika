@@ -7,7 +7,7 @@
 struct Scene;
 typedef GLubyte Pixel[4];
 
-void cycle_texture(struct Scene* scene);
+void cycle_texture(struct Scene* scene, int dir);
 GLuint load_texture(char* filename);
 
 extern GLuint current_texture;

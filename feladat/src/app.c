@@ -3,7 +3,6 @@
 #include <texture.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
 
 void init_app(App *app, int width, int height)
 {
@@ -11,7 +10,6 @@ void init_app(App *app, int width, int height)
     int inited_loaders;
 
     app->is_running = false;
-    app->show_help = false;
 
     error_code = SDL_Init(SDL_INIT_EVERYTHING);
     if (error_code != 0)
@@ -38,11 +36,6 @@ void init_app(App *app, int width, int height)
         return;
     }
 
-    /*if (TTF_Init() == -1) {
-        printf("[ERROR] TTF initialization error: %s\n", TTF_GetError());
-        return;
-    }*/
-
     app->gl_context = SDL_GL_CreateContext(app->window);
     if (app->gl_context == NULL)
     {
@@ -55,7 +48,6 @@ void init_app(App *app, int width, int height)
 
     init_camera(&(app->camera));
     init_scene(&(app->scene));
-    // init_textures();
 
     app->is_running = true;
 }
@@ -67,7 +59,7 @@ void init_opengl()
     glEnable(GL_NORMALIZE);
     glEnable(GL_AUTO_NORMAL);
 
-    glClearColor(0.1, 0.1, 0.1, 1.0);
+    glClearColor(0.05, 0.1, 0.3, 1.0);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -80,6 +72,8 @@ void init_opengl()
 
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT1);
+    glEnable(GL_LIGHT2);
 }
 
 void reshape(GLsizei width, GLsizei height)
@@ -171,7 +165,7 @@ void handle_app_events(App *app)
                 reset_camera_view(&(app->camera));
                 break;
             case SDL_SCANCODE_F1:
-                app->show_help = !(app->show_help);
+                app->scene.show_help = !(app->scene.show_help);
                 break;
             case SDL_SCANCODE_UP:
                 app->scene.platform_scale_z += 0.1f;
@@ -227,9 +221,18 @@ void handle_button_clicks(Scene *scene, int mouse_x, int mouse_y)
     float x = (float)mouse_x / window_w;
     float y = 1.0f - (float)mouse_y / window_h;
 
-    if (x >= 0.005f && x <= 0.19f && y >= 0.9f && y <= 0.95f)
+    if (x >= 0.005f && x <= 0.0525f && y >= 0.9f && y <= 0.95f)
     {
-        cycle_texture(scene);
+        if(scene->texture_index == 0){
+            cycle_texture(scene, 9);
+        }
+        else{
+            cycle_texture(scene, -1);
+        }
+    }
+    else if (x >= 0.1475f && x <= 0.195f && y >= 0.9f && y <= 0.95f)
+    {
+        cycle_texture(scene, 1);
     }
 
     if (x >= 0.005f && x <= 0.19f && y >= 0.8f && y <= 0.85f)
@@ -285,6 +288,7 @@ void update_app(App *app)
 void render_app(App *app)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     glMatrixMode(GL_MODELVIEW);
 
     glPushMatrix();
@@ -292,152 +296,15 @@ void render_app(App *app)
     render_scene(&(app->scene));
     glPopMatrix();
     glPushMatrix();
-    draw_panel();
 
     if (app->camera.is_preview_visible)
     {
         show_texture_preview();
     }
 
-    if (app->show_help)
-    {
-        render_help_overlay();
-    }
+    glPopMatrix();
 
     SDL_GL_SwapWindow(app->window);
-}
-
-/*void draw_text(float x, float y, const char *text, SDL_Color color, TTF_Font *font)
-{
-    SDL_Surface *surface = TTF_RenderText_Solid(font, text, color);
-    if (surface == NULL)
-    {
-        printf("Unable to create text surface! SDL_ttf Error: %s\n", TTF_GetError());
-        return;
-    }
-
-    GLuint texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glEnable(GL_TEXTURE_2D);
-    glPushMatrix();
-    glTranslatef(x, y, 0.0f);
-
-    glBegin(GL_QUADS);
-    glTexCoord2f(0.0f, 0.0f); glVertex2f(0, 0);
-    glTexCoord2f(1.0f, 0.0f); glVertex2f(surface->w, 0);
-    glTexCoord2f(1.0f, 1.0f); glVertex2f(surface->w, surface->h);
-    glTexCoord2f(0.0f, 1.0f); glVertex2f(0, surface->h);
-    glEnd();
-
-    glPopMatrix();
-    glDisable(GL_TEXTURE_2D);
-
-    SDL_FreeSurface(surface);
-    glDeleteTextures(1, &texture);
-}*/
-
-void draw_panel()
-{
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    glOrtho(0, 1, 0, 1, -1, 1);
-
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-    glLoadIdentity();
-
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_LIGHTING);
-
-    glColor3f(1.0, 0.6, 0.8);
-    glBegin(GL_QUADS);
-    glVertex2f(0.0f, 0.0f);
-    glVertex2f(0.2f, 0.0f);
-    glVertex2f(0.2f, 1.0f);
-    glVertex2f(0.0f, 1.0f);
-    glEnd();
-
-    draw_button(0.005f, 0.95f, 0.19f, 0.05f, 1.0f, 0.8f, 0.9f);
-    draw_button(0.005f, 0.85f, 0.19f, 0.05f, 1.0f, 0.8f, 0.9f);
-    draw_button(0.005f, 0.75f, 0.0475f, 0.05f, 1.0f, 0.0f, 0.0f);
-    draw_button(0.0525f, 0.75f, 0.0475f, 0.05f, 0.0f, 1.0f, 0.0f);
-    draw_button(0.1f, 0.75f, 0.0475f, 0.05f, 0.0f, 0.0f, 1.0f);
-    draw_button(0.1475f, 0.75f, 0.0475f, 0.05f, 0.0f, 0.0f, 0.0f);
-
-    glEnable(GL_LIGHTING);
-    glEnable(GL_DEPTH_TEST);
-
-    glPopMatrix();
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-    glMatrixMode(GL_MODELVIEW);
-}
-
-void draw_button(float x, float y, float w, float h, float r, float g, float b)
-{
-    glPushMatrix();
-    glTranslatef(x, y, 0.0f);
-
-    glColor3f(r, g, b);
-    glBegin(GL_QUADS);
-    glVertex2f(0, 0);
-    glVertex2f(w, 0);
-    glVertex2f(w, -h);
-    glVertex2f(0, -h);
-    glEnd();
-    glPopMatrix();
-}
-
-void render_help_overlay()
-{
-    /*TTF_Font *font = TTF_OpenFont("assets/font.ttf", 24);
-    if (font == NULL)
-    {
-        printf("Font betöltése nem sikerült: %s\n", TTF_GetError());
-        return;
-    }*/
-
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    glOrtho(0, 1, 0, 1, -1, 1);
-
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-    glLoadIdentity();
-
-    glDisable(GL_LIGHTING);
-    glDisable(GL_DEPTH_TEST);
-
-    /*draw_text(10, 570, "WASD - Mozgás", (SDL_Color){255, 255, 255, 255}, font);
-    draw_text(10, 550, "Z/X/Y - Kamera nézetek", (SDL_Color){255, 255, 255, 255}, font);
-    draw_text(10, 530, "R - Reset kamera", (SDL_Color){255, 255, 255, 255}, font);
-    draw_text(10, 510, "UP/DOWN - Platform méret", (SDL_Color){255, 255, 255, 255}, font);
-    */
-    glColor3f(1.0f, 1.0f, 1.0f); // sötét szürke
-    glBegin(GL_QUADS);
-    glVertex2f(0.05f, 0.05f);
-    glVertex2f(0.95f, 0.05f);
-    glVertex2f(0.95f, 0.95f);
-    glVertex2f(0.05f, 0.95f);
-    glEnd();
-
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_LIGHTING);
-
-    glPopMatrix();
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-    glMatrixMode(GL_MODELVIEW);
-
-    // TTF_CloseFont(font);
 }
 
 void destroy_app(App *app)
@@ -453,6 +320,5 @@ void destroy_app(App *app)
     }
 
     IMG_Quit();
-    // TTF_Quit();
     SDL_Quit();
 }
