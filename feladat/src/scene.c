@@ -1,5 +1,6 @@
 #include "scene.h"
 #include "texture.h"
+#include "camera.h"
 #include <load.h>
 #include <draw.h>
 #include <math.h>
@@ -19,6 +20,7 @@ void init_scene(Scene *scene)
     scene->platform_texture_id = load_texture("assets/textures/platform_lover.png");
     scene->button_texture_id = load_texture("assets/textures/button_lover.png");
     scene->help_texture_id = load_texture("assets/textures/help.png");
+    scene->map_texture_id = load_texture("assets/textures/stage_map.png");
 
     scene->material.ambient.red = 1.0;
     scene->material.ambient.green = 1.0;
@@ -152,16 +154,6 @@ void set_spotlight(float px, float py, float pz, float dx, float dy, float dz, f
 
     float no_emission[] = {0.0f, 0.0f, 0.0f, 1.0f};
     glMaterialfv(GL_FRONT, GL_EMISSION, no_emission);
-
-    /*float angle = asinf(dz / sqrt(dx * dx + dy * dy + dz * dz));
-    glPushMatrix();
-    glTranslatef(px, py, pz);
-    glRotatef(angle * 180.0f / M_PI, -dy, dx, 0.0f);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    draw_cone(0.125f, 2.0f, 100);
-    glDisable(GL_BLEND);
-    glPopMatrix();*/
 }
 
 void set_screen_lighting(const Scene *scene, float px, float py, float pz)
@@ -280,9 +272,10 @@ void render_scene(const Scene *scene)
     glPopMatrix();
     glDisable(GL_LIGHT2);
     draw_panel(scene);
+    draw_map(scene->map_texture_id);
    if (scene->show_help)
     {
-        render_help_overlay(scene->help_texture_id);
+        draw_help(scene->help_texture_id);
     }
 }
 
@@ -460,7 +453,7 @@ void draw_button(GLuint texture_id, float x, float y, float w, float h, float r,
     }
 }
 
-void render_help_overlay(GLuint texture_id)
+void draw_help(GLuint texture_id)
 {
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture_id);
@@ -490,6 +483,49 @@ void render_help_overlay(GLuint texture_id)
     
     glTexCoord2f(0.0f, 0.0f);
     glVertex2f(0.05f, 0.95f);
+    glEnd();
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+
+    glDisable(GL_TEXTURE_2D);
+}
+
+void draw_map(GLuint texture_id)
+{
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture_id);
+
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0, 1, 0, 1, -1, 1);
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    glDisable(GL_LIGHTING);
+    glDisable(GL_DEPTH_TEST);
+
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex2f(0.8f, 0.7f);
+
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex2f(1.0f, 0.7f);
+    
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex2f(1.0f, 1.0f);
+    
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex2f(0.8f, 1.0f);
     glEnd();
 
     glEnable(GL_DEPTH_TEST);

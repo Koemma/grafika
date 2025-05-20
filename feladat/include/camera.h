@@ -15,11 +15,6 @@ typedef struct Camera
     vec3 speed;
     bool is_preview_visible;
 } Camera;
-typedef struct AABB
-{
-    vec3 min;  // alsó sarok
-    vec3 max;  // felső sarok
-} AABB;
 
 void init_camera(Camera* camera);
 void update_camera(Camera* camera, double time, const Scene* scene);

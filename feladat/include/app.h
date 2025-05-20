@@ -26,6 +26,7 @@ void handle_app_events(App* app);
 void handle_button_clicks(Scene* scene, int mouse_x, int mouse_y);
 void update_app(App* app);
 void render_app(App* app);
+void draw_point(const Camera* camera);
 void destroy_app(App* app);
 
 #endif

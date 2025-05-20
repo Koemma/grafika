@@ -223,10 +223,12 @@ void handle_button_clicks(Scene *scene, int mouse_x, int mouse_y)
 
     if (x >= 0.005f && x <= 0.0525f && y >= 0.9f && y <= 0.95f)
     {
-        if(scene->texture_index == 0){
+        if (scene->texture_index == 0)
+        {
             cycle_texture(scene, 9);
         }
-        else{
+        else
+        {
             cycle_texture(scene, -1);
         }
     }
@@ -304,7 +306,85 @@ void render_app(App *app)
 
     glPopMatrix();
 
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0, 1, 0, 1, -1, 1);
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    if(!(app->scene.show_help)){
+        draw_point(&(app->camera));
+    }
+
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+
+    glMatrixMode(GL_MODELVIEW);
+
     SDL_GL_SwapWindow(app->window);
+}
+
+void draw_point(const Camera *camera)
+{
+    float norm_x = camera->position.x / 18 + 0.5;
+    float norm_y = camera->position.y / 9 + 0.4;
+
+    float marker_x = 0.8f + norm_x * 0.2f;
+    float marker_y = 0.7f + norm_y * 0.3f;
+
+    float size = 0.004f;
+
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0, 1, 0, 1, -1, 1);
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    glDisable(GL_LIGHTING);
+    glDisable(GL_DEPTH_TEST);
+
+    glColor3f(1.0f, 0.0f, 0.4f);
+
+    glBegin(GL_QUADS);
+    if (marker_x > 1.0)
+    {
+        marker_x = 1.0;
+    }
+    else if (marker_x < 0.8)
+    {
+        marker_x = 0.8;
+    }
+    else if (marker_y > 1.0)
+    {
+        marker_y = 1.0;
+    }
+    else if (marker_y < 0.7)
+    {
+        marker_y = 0.7;
+    }
+    glVertex2f(marker_x - size, marker_y - size);
+    glVertex2f(marker_x + size, marker_y - size);
+    glVertex2f(marker_x + size, marker_y + size);
+    glVertex2f(marker_x - size, marker_y + size);
+
+    glEnd();
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+
+    glDisable(GL_TEXTURE_2D);
 }
 
 void destroy_app(App *app)

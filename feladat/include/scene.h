@@ -22,6 +22,7 @@ typedef struct Scene
     GLuint platform_texture_id;
     GLuint button_texture_id;
     GLuint help_texture_id;
+    GLuint map_texture_id;
     BoundingBox screen_box;
     float platform_scale_z;
     int texture_index; 
@@ -49,6 +50,7 @@ void drawFloor();
 void draw_gradient_background();
 void draw_panel(const Scene *scene);
 void draw_button(GLuint texture_id, float x, float y, float w, float h, float r, float g, float b);
-void render_help_overlay(GLuint texture_id);
+void draw_help(GLuint texture_id);
+void draw_map(GLuint texture_id);
 
 #endif

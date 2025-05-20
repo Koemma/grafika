@@ -1,23 +1,19 @@
 Stage simulator
 (The Eras Tour stage - Taylor Swift)
 
-- színpad objektum
-- kivetítő objektum
-- platform objektum
+My program is based on Taylor Swift's Eras Tour stage from her recent 
+tour. The main objects are the stage, the screen, and the movable 
+platforms. Their textures can be changed to different visuals of the 
+concert, which represent each album of hers.
 
-- textúra változtatás
-- platform fel, le mozgatás
-- ütközésvizsgálat
-- térkép
-- fények állítása
-- használati útmutató
-- árnyék
+There's a control panel on the left side of the window, which contains 
+three buttons. The first button changes the texture, with the second 
+button the screen-, stage-, and platformlight can be switched on and 
+off. The third button is divided to four parts, red, green, blue, and 
+black. Clicking on each button will add more of the color to the 
+spotlight on the top of the screen (the black will turn off the lights).
 
-Útmutató:
-- WASD billentyűk -> mozgás
-- egér -> kamera mozgatás
-- XYZR billenytűk -> nézet az x, y, z tengelyről, r visszaálltás
-- fel, le nyíl -> platfrom mozgatás
-- gomb -> textúra változtatás
-       -> színpad és kivetítő fény fel / le kapcsolás
-       -> színes reflektorfény 
+There's a little map on the top of the right side, which tracks the 
+camera's location.
+
+'Help' cantains further instructions (F1).
